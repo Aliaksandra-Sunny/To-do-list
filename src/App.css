@@ -11,6 +11,8 @@
   padding: 10px;
 }
 
-.todoList-task {
+.todoList-task {}
 
+.filter-active {
+  background-color: #99a6ff;
 }
