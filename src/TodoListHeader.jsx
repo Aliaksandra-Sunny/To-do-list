@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from "prop-types";
+import TodoListTasks from "./TodoListTasks";
 
 class TodoListHeader extends React.Component {
     render = (props) => {
@@ -16,3 +18,7 @@ class TodoListHeader extends React.Component {
 
 export default TodoListHeader;
 
+TodoListHeader.propTypes={
+    titleRef: PropTypes.object,
+    onAddTaskClick: PropTypes.func
+}
