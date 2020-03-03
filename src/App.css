@@ -1,5 +1,4 @@
 .App {
-
 }
 
 .todoList {
@@ -15,4 +14,12 @@
 
 .filter-active {
   background-color: #99a6ff;
+}
+
+.error {
+  border-color: red;
+}
+
+.todoList-task.done{
+  opacity: 0.5;
 }

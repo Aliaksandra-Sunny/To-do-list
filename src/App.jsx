@@ -20,7 +20,6 @@ class App extends React.Component {
         filterValue: "All",
     }
 
-
     addTask = (newTitle) => {
         let newTask = {
             title: newTitle,
@@ -56,7 +55,6 @@ class App extends React.Component {
     }
 
     render = () => {
-
         return (
             <div className="App">
                 <div className="todoList">

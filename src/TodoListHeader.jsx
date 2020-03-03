@@ -3,31 +3,56 @@ import PropTypes from "prop-types";
 
 class TodoListHeader extends React.Component {
 
-    newTaskTitleRef=React.createRef();
+    state = {
+        error: true,
+        title:"",
+    };
+
     onAddTaskClick = () => {
-        if (this.newTaskTitleRef.current.value !== "") {
-            let newText = this.newTaskTitleRef.current.value;
-            this.newTaskTitleRef.current.value = "";
+        if (this.state.title !== "") {
+            let newText = this.state.title;
+            this.state.title = "";
             this.props.addTask(newText);
-        } else alert("Введите заголовок!");
+        }
+    };
+
+    changeInput = (e) => {
+        if (this.state.title !== "") {
+            this.setState({
+                error: false,
+                title:e.currentTarget.value,
+            });
+        } else
+            this.setState({
+                error: true,
+                title:e.currentTarget.value,
+            });
     }
 
-    render = (props) => {
+    onEnterPress=(e)=>{
+        if(e.key === "Enter")
+            this.onAddTaskClick();
+    }
+
+    render = () => {
         return (
             <div className="todoList-header">
-                <h3 className="todoList-header__title">What to Learn</h3>
+                <h3 className="todoList-header__title">What to Learn?</h3>
                 <div className="todoList-newTaskForm">
-                    <input ref={this.newTaskTitleRef} type="text" placeholder="New task name"/>
+                    <input onKeyPress={this.onEnterPress} onChange={this.changeInput}
+                           className={this.state.error === true ? "error" : ""}
+                           value={this.state.title}
+                           type="text" placeholder="New task name"/>
                     <button onClick={this.onAddTaskClick}>Add</button>
                 </div>
             </div>
         );
     }
-}
+};
 
 export default TodoListHeader;
 
-TodoListHeader.propTypes={
+TodoListHeader.propTypes = {
     titleRef: PropTypes.object,
     onAddTaskClick: PropTypes.func
 }
