@@ -35,8 +35,8 @@ class App extends React.Component {
         }
         this.setState(state, () => {
             this.state.tasks.forEach(task=> {
-                if (task.id > this.newTaskId) {
-                    this.newTaskId = task.id++;
+                if (task.id >= this.newTaskId) {
+                    this.newTaskId = task.id + 1;
                 }
             });
         });
@@ -55,7 +55,7 @@ class App extends React.Component {
         this.setState({
                 tasks: newTasks,
             },
-            ()=>{  this.saveState()}
+            ()=>{ this.saveState()}
         );
     };
 
