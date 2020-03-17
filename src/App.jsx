@@ -1,19 +1,15 @@
 import React from 'react';
 import './App.css';
-import TodoListHeader from "./TodoListHeader";
-import TodoListTasks from "./TodoListTasks";
-import TodoListFooter from "./TodoListFooter";
+import TodoList from "./TodoList";
+import AddNewItemForm from "./AddNewItemForm";
 
 class App extends React.Component {
-    constructor(props) {
-        super(props);
-    }
 
-    newTaskId = 0;
-    state = {
-        tasks: [],
-        filterValue: "All",
+    state={
+        lists:[
+        ]
     };
+    newListId = 0;
 
     componentDidMount() {
         this.restoreState();
@@ -21,92 +17,47 @@ class App extends React.Component {
 
     saveState = () => {
         let stateAsString = JSON.stringify(this.state);
-        localStorage.setItem("our-state", stateAsString);
+        localStorage.setItem("lists" , stateAsString);
     };
 
     restoreState = () => {
         let state = {
-            tasks: [],
-            filterValue: "All",
+            lists: [],
         };
-        let stateAsString = localStorage.getItem("our-state");
+        let stateAsString = localStorage.getItem("lists");
         if (stateAsString != null) {
             state = JSON.parse(stateAsString);
         }
         this.setState(state, () => {
-            this.state.tasks.forEach(task=> {
-                if (task.id >= this.newTaskId) {
-                    this.newTaskId = task.id + 1;
+            this.state.lists.forEach(list=> {
+                if (list.id >= this.newListId) {
+                    this.newListId = list.id + 1;
                 }
             });
         });
     };
 
-
-    addTask = (newTitle) => {           //add new task (props for header)
-        let newTask = {
-            id: this.newTaskId,
+    addLists= (newTitle) => {           //add new list (props for header)
+        let newList = {
+            id: this.newListId,
             title: newTitle,
-            isDone: false,
-            priority: "low"
         };
-        this.newTaskId++;
-        let newTasks = [...this.state.tasks, newTask];
+        this.newListId++;
+        let newLists = [...this.state.lists, newList];
         this.setState({
-                tasks: newTasks,
+                lists: newLists,
             },
             ()=>{ this.saveState()}
         );
     };
 
-    changeFilter = (newFilterValue) => {        //change what tasks to show (props for footer)
-        this.setState({
-                filterValue: newFilterValue,
-            } ,
-            ()=>{  this.saveState()}
-        )
-    };
-
-    changeTitle = (id, newTitle) => {       //edit title by click on ToDoListTasks(props)
-        this.changeTask(id, {title: newTitle});
-    };
-
-    changeStatus = (id, isDone) => {        //change checkbox of task (props for ToDoListTasks)
-        this.changeTask(id, {isDone: isDone});
-    };
-
-    changeTask = (id, obj) => {
-        let newTasks = this.state.tasks.map(t => {
-            if (t.id !== id)
-                return t;
-            else
-                return {...t, ...obj};
-        });
-        this.setState({
-            tasks: newTasks,
-        } ,
-        ()=>{  this.saveState()})
-    };
-
     render = () => {
+        const lists=this.state.lists.map(list=><TodoList id={list.id} title={list.title}/>)
         return (
             <div className="App">
-                <div className="todoList">
-                    <TodoListHeader addTask={this.addTask} titleRef={this.newTaskTitleRef}/>
-                    <TodoListTasks changeStatus={this.changeStatus} changeTitle={this.changeTitle}
-                                   tasks={this.state.tasks.filter(t => {
-                                           switch (this.state.filterValue) {
-                                               case "Completed":
-                                                   return t.isDone === true;
-                                               case "Active":
-                                                   return t.isDone === false;
-                                               default:
-                                                   return true;
-                                           }
-                                       }
-                                   )
-                                   }/>
-                    <TodoListFooter changeFilter={this.changeFilter} filterValue={this.state.filterValue}/>
+                <AddNewItemForm addItem={this.addLists}/>
+                <div className="lists">
+                    {lists}
                 </div>
             </div>
         );

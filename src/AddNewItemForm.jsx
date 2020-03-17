@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from "prop-types";
 
-class TodoListHeader extends React.Component {
+class AddNewItemForm extends React.Component {
 
     state = {
         error: true,
@@ -17,17 +17,17 @@ class TodoListHeader extends React.Component {
 
     onEnterPress = (e) => {
         if (e.key === "Enter")
-            this.onAddTaskClick();
+            this.onAddItemClick();
     }
 
-    onAddTaskClick = () => {
+    onAddItemClick = () => {
         if (this.state.title !== "") {
             let newText = this.state.title;
             this.setState({
                 error: true,
                 title: "",
             })
-            this.props.addTask(newText);
+            this.props.addItem(newText);
         } else {
             this.setState({
                 error: false,
@@ -37,23 +37,19 @@ class TodoListHeader extends React.Component {
 
     render = () => {
         return (
-            <div className="todoList-header">
-                <h3 className="todoList-header__title">What to Learn?</h3>
-                <div className="todoList-newTaskForm">
+            <div className="input">
                     <input onKeyPress={this.onEnterPress} onChange={this.changeInput}
                            className={this.state.error === true ? "error" : ""}
                            value={this.state.title}
-                           type="text" placeholder="New task name"/>
-                    <button onClick={this.onAddTaskClick}>Add</button>
-                </div>
+                           type="text"/>
+                <button onClick={this.onAddItemClick}>Add</button>
             </div>
         );
     }
 };
 
-export default TodoListHeader;
+export default AddNewItemForm;
 
-TodoListHeader.propTypes = {
-    titleRef: PropTypes.object,
-    onAddTaskClick: PropTypes.func
-}
+AddNewItemForm.propTypes = {
+    func: PropTypes.func
+};
