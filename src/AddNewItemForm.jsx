@@ -37,7 +37,7 @@ class AddNewItemForm extends React.Component {
 
     render = () => {
         return (
-            <div className="input">
+            <div className="form">
                     <input onKeyPress={this.onEnterPress} onChange={this.changeInput}
                            className={this.state.error === true ? "error" : ""}
                            value={this.state.title}
