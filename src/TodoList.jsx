@@ -4,6 +4,15 @@ import TodoListFooter from "./TodoListFooter";
 import TodoListTitle from "./TodoListTitle";
 import AddNewItemForm from "./AddNewItemForm";
 import {connect} from "react-redux";
+import {
+    ADD_TASK,
+    addTaskAC,
+    CHANGE_TASK,
+    changeFilterAC,
+    changeTaskAC,
+    DELETE_LIST,
+    deleteListkAC
+} from "./todoListReducer";
 
 class TodoList extends React.Component {
     constructor(props) {
@@ -61,6 +70,7 @@ class TodoList extends React.Component {
     };
 
     changeFilter = (newFilterValue) => {        //change what tasks to show (props for footer)
+        debugger
         this.setState({
                 filterValue: newFilterValue,
             } ,
@@ -114,7 +124,7 @@ class TodoList extends React.Component {
                                        }
                                    )
                                    }/>
-                    <TodoListFooter changeFilter={this.changeFilter} filterValue={this.props.filterValue}/>
+                    <TodoListFooter listId={this.props.listId}  changeFilter={this.props.changeFilter} filterValue={this.props.filterValue}/>
                 </div>
         );
     }
@@ -123,15 +133,19 @@ class TodoList extends React.Component {
 const mapDispatchToProps = (dispatch) => {
     return {
         addTask: (newTask, listId) => {
-            const action = {type: "ADD-TASK", newTask: newTask, listId: listId};
+            const action = addTaskAC(newTask, listId);
             dispatch(action);
         },
         changeTask: (listId, taskId, obj)=>{
-            const action = {type: "CHANGE-TASK", listId: listId, taskId: taskId, obj: obj};
+            const action = changeTaskAC(listId, taskId, obj);
             dispatch(action);
         },
         deleteList: (listId)=>{
-            const action = {type: "DELETE-LIST", listId: listId};
+            const action = deleteListkAC(listId);
+            dispatch(action);
+        },
+        changeFilter: (newFilter, listId)=>{
+            const action = changeFilterAC(newFilter, listId);
             dispatch(action);
         }
     }

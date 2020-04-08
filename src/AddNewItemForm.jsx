@@ -13,12 +13,12 @@ class AddNewItemForm extends React.Component {
             error: false,
             title: e.currentTarget.value,
         });
-    }
+    };
 
     onEnterPress = (e) => {
         if (e.key === "Enter")
             this.onAddItemClick();
-    }
+    };
 
     onAddItemClick = () => {
         if (this.state.title !== "") {
@@ -26,7 +26,7 @@ class AddNewItemForm extends React.Component {
             this.setState({
                 error: true,
                 title: "",
-            })
+            });
             this.props.addItem(newText);
         } else {
             this.setState({
@@ -46,7 +46,7 @@ class AddNewItemForm extends React.Component {
             </div>
         );
     }
-};
+}
 
 export default AddNewItemForm;
 

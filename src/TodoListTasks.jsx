@@ -21,4 +21,4 @@ export default TodoListTasks;
 
 TodoListTasks.propTypes={
     tasks: PropTypes.array
-}
+};

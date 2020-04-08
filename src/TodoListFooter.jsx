@@ -21,13 +21,13 @@ class TodoListFooter extends React.Component {
     };
 
     onAllFilterClick = () => {
-        this.props.changeFilter("All");
+        this.props.changeFilter("All", this.props.listId);
     };
     onCompletedFilterClick = () => {
-        this.props.changeFilter("Completed");
+        this.props.changeFilter("Completed", this.props.listId);
     };
     onActiveFilterClick = () => {
-        this.props.changeFilter("Active");
+        this.props.changeFilter("Active", this.props.listId);
     };
 
     render = () => {
