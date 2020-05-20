@@ -1,16 +1,18 @@
 import React from 'react';
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
-import {DELETE_TASK, deleteTaskAC} from "./todoListReducer";
+import {deleteTaskAC} from "./todoListReducer";
+import axios from "axios";
 
 class TodoListTask extends React.Component {
 
     state = {
         editMore: false,
+        title: this.props.task.title
     };
 
     onIsDoneChanged = (e) => {
-        this.props.changeStatus(this.props.task.id, e.currentTarget.checked);
+        this.props.changeStatus(this.props.task, e.currentTarget.checked ? 2 : 0);
     };
 
     activateEditMore = () => {
@@ -22,22 +24,38 @@ class TodoListTask extends React.Component {
     deactivateEditMore = () => {
         this.setState({
             editMore: false,
-        })
+        });
+        this.props.changeTitle(this.props.task, this.state.title);
     };
 
-    changeTitle=(e)=>{
-        this.props.changeTitle(this.props.task.id, e.currentTarget.value);
+    changeTitle = (e) => {
+        this.setState({title: e.currentTarget.value});
+    };
+
+    deleteTask = () => {
+        axios.delete(`https://social-network.samuraijs.com/api/1.1/todo-lists/${this.props.listId}/tasks/${this.props.task.id}`,
+            {
+                withCredentials: true,
+                headers: {"API-KEY": "ed9ff87e-25ab-4b75-a8a6-d22424d524be"}
+            }
+        ).then(res => {
+                if (res.data.resultCode === 0)
+                    this.props.deleteTask(this.props.task.id, this.props.listId)
+            }
+        );
     };
 
     render = () => {
         return (
-            <div className={this.props.task.isDone ? "todoList-task done" : "todoList-task"}>
-                <input type="checkbox" onChange={this.onIsDoneChanged} checked={this.props.task.isDone}/>
+            <div className={this.props.task.status === 2 ? "todoList-task done" : "todoList-task"}>
+                <input type="checkbox" onChange={this.onIsDoneChanged} checked={this.props.task.status === 2}/>
                 {this.state.editMore
-                    ? <input onBlur={this.deactivateEditMore} autoFocus={true} onChange={this.changeTitle} value={this.props.task.title}/>
+                    ? <input onBlur={this.deactivateEditMore} autoFocus={true} onChange={this.changeTitle}
+                             value={this.state.title}/>
                     : <span onClick={this.activateEditMore}>{this.props.task.id} - {this.props.task.title}</span>
                 }, priority: {this.props.task.priority}
-                <button onClick={()=>{this.props.deleteTask(this.props.task.id, this.props.listId)}}>X</button>
+                <button onClick={this.deleteTask}>X
+                </button>
             </div>
         );
     }
@@ -56,6 +74,6 @@ const ConnectedTodoListTask = connect(null, mapDispatchToProps)(TodoListTask);
 export default ConnectedTodoListTask;
 
 TodoListTask.propTypes = {
-    isDone: PropTypes.bool,
+    status: PropTypes.number,
     priority: PropTypes.string
 };
