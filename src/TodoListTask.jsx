@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import {deleteTaskAC} from "./todoListReducer";
-import axios from "axios";
+import {api} from "./api";
 
 class TodoListTask extends React.Component {
 
@@ -33,12 +33,7 @@ class TodoListTask extends React.Component {
     };
 
     deleteTask = () => {
-        axios.delete(`https://social-network.samuraijs.com/api/1.1/todo-lists/${this.props.listId}/tasks/${this.props.task.id}`,
-            {
-                withCredentials: true,
-                headers: {"API-KEY": "ed9ff87e-25ab-4b75-a8a6-d22424d524be"}
-            }
-        ).then(res => {
+        api.deleteTask(this.props.listId, this.props.task.id).then(res => {
                 if (res.data.resultCode === 0)
                     this.props.deleteTask(this.props.task.id, this.props.listId)
             }

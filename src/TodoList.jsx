@@ -10,7 +10,7 @@ import {
     changeTaskAC,
     deleteListAC, setTasksAC
 } from "./todoListReducer";
-import axios from "axios";
+import {api} from "./api";
 
 class TodoList extends React.Component {
 
@@ -24,10 +24,7 @@ class TodoList extends React.Component {
     }
 
     restoreState = () => {
-        axios.get(`https://social-network.samuraijs.com/api/1.1/todo-lists/${this.props.listId}/tasks`, {
-            withCredentials: true,
-            headers: {"API-KEY": "ed9ff87e-25ab-4b75-a8a6-d22424d524be"}
-        })
+       api.setTasks(this.props.listId)
             .then(res => {
                 this.props.setTasks(res.data.items, this.props.listId);
             });
@@ -52,12 +49,7 @@ class TodoList extends React.Component {
     };
 
     addTask = (newTitle) => {           //add new task (props for header)
-        axios.post(`https://social-network.samuraijs.com/api/1.1/todo-lists/${this.props.listId}/tasks`,
-            {title: newTitle},
-            {
-                withCredentials: true,
-                headers: {"API-KEY": "ed9ff87e-25ab-4b75-a8a6-d22424d524be"}
-            }).then(res => {
+            api.createTask(newTitle,this.props.listId).then(res => {
             if (res.data.resultCode === 0) {
                 this.props.addTask(res.data.data.item);
             }
@@ -72,15 +64,10 @@ class TodoList extends React.Component {
     };
 
     deleteList = () => {
-        axios.delete(`https://social-network.samuraijs.com/api/1.1/todo-lists/${this.props.listId}`,
-            {
-                withCredentials: true,
-                headers: {"API-KEY": "ed9ff87e-25ab-4b75-a8a6-d22424d524be"}
-            }).then(res => {
+       api.deleteList(this.props.listId).then(res => {
             if (res.data.resultCode === 0)
                 this.props.deleteList(this.props.listId)
         });
-
     };
 
     changeTitle = (task, newTitle) => {       //edit title by click on ToDoListTasks(props)
@@ -92,18 +79,11 @@ class TodoList extends React.Component {
     };
 
     changeTask = (task, obj) => {
-        axios.put(`https://social-network.samuraijs.com/api/1.1/todo-lists/${this.props.listId}/tasks/${task.id}`,
-            {...task, ...obj},
-            {
-                withCredentials: true,
-                headers: {"API-KEY": "ed9ff87e-25ab-4b75-a8a6-d22424d524be"}
-            }
-        ).then(res => {
+        api.updateTask({...task, ...obj}).then(res => {
                 if (res.data.resultCode === 0)
                     this.props.changeTask(res.data.data.item)
             }
         );
-
     };
 
     render = () => {
