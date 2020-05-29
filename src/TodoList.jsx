@@ -8,7 +8,7 @@ import {
     addTaskAC,
     changeFilterAC,
     changeTaskAC,
-    deleteListAC, setTasksAC
+    deleteListAC, loadTasksTC,
 } from "./todoListReducer";
 import {api} from "./api";
 
@@ -24,29 +24,9 @@ class TodoList extends React.Component {
     }
 
     restoreState = () => {
-       api.setTasks(this.props.listId)
-            .then(res => {
-                this.props.setTasks(res.data.items, this.props.listId);
-            });
+        this.props.loadTasks(this.props.listId);
     };
 
-    ___restoreState = () => {
-        let state = {
-            tasks: [],
-            filterValue: "All",
-        };
-        let stateAsString = localStorage.getItem("our-state" + this.props.id);
-        if (stateAsString != null) {
-            state = JSON.parse(stateAsString);
-        }
-        this.setState(state, () => {
-            this.state.tasks.forEach(task => {
-                if (task.id >= this.newTaskId) {
-                    this.newTaskId = task.id + 1;
-                }
-            });
-        });
-    };
 
     addTask = (newTitle) => {           //add new task (props for header)
             api.createTask(newTitle,this.props.listId).then(res => {
@@ -133,9 +113,8 @@ const mapDispatchToProps = (dispatch) => {
             const action = changeFilterAC(newFilter, listId);
             dispatch(action);
         },
-        setTasks: (tasks, listId) => {
-            const action = setTasksAC(tasks, listId);
-            dispatch(action);
+        loadTasks (listId) {
+            dispatch(loadTasksTC(listId))
         }
     }
 };

@@ -1,3 +1,5 @@
+import {api} from "./api";
+
 export const ADD_LIST = "todoListReducer/ADD-LIST";
 export const ADD_TASK = "todoListReducer/ADD-TASK";
 export const DELETE_TASK = "todoListReducer/DELETE-TASK";
@@ -104,10 +106,10 @@ const reducer = (state = initialState, action) => {
 };
 
 
-export const addListAC = (newList) => {
+const addListAC = (newList) => {
     return {type: ADD_LIST, newList};
 };
-export const setListsAC = (lists) => {
+const setListsAC = (lists) => {
     return {type: SET_LISTS, lists};
 };
 export const addTaskAC = (newTask) => {
@@ -125,8 +127,33 @@ export const deleteTaskAC = (taskId, listId) => {
 export const changeFilterAC = (newFilter, listId) => {
     return {type: CHANGE_FILTER, newFilter, listId};
 };
-export const setTasksAC = (tasks, listId) => {
+const setTasksAC = (tasks, listId) => {
     return {type: SET_TASKS, tasks, listId}
+};
+export const loadTasksTC = (listId) => {
+    return (dispatch) => {
+        api.setTasks(listId)
+            .then(res => {
+                dispatch(setTasksAC(res.data.items, listId));
+            });
+    }
+};
+export const loadListsTC = () => {
+    return (dispatch) => {
+        api.setLists()
+            .then(res => {
+                dispatch(setListsAC(res.data));
+            });
+    }
+};
+export const addListTC = (newTitle) => {
+    return (dispatch) => {
+        api.addList(newTitle).then(res => {
+            if (res.data.resultCode === 0) {
+                dispatch(addListAC(res.data.data.item))
+            }
+        });
+    }
 };
 
 export default reducer;
