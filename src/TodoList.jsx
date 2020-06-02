@@ -4,13 +4,7 @@ import TodoListFooter from "./TodoListFooter";
 import TodoListTitle from "./TodoListTitle";
 import AddNewItemForm from "./AddNewItemForm";
 import {connect} from "react-redux";
-import {
-    addTaskAC,
-    changeFilterAC,
-    changeTaskAC,
-    deleteListAC, loadTasksTC,
-} from "./todoListReducer";
-import {api} from "./api";
+import {addTaskTC, changeFilterAC, changeTaskTC, deleteListTC, loadTasksTC,} from "./todoListReducer";
 
 class TodoList extends React.Component {
 
@@ -27,13 +21,8 @@ class TodoList extends React.Component {
         this.props.loadTasks(this.props.listId);
     };
 
-
     addTask = (newTitle) => {           //add new task (props for header)
-            api.createTask(newTitle,this.props.listId).then(res => {
-            if (res.data.resultCode === 0) {
-                this.props.addTask(res.data.data.item);
-            }
-        });
+       this.props.addTask(newTitle, this.props.listId);
     };
 
     changeFilter = (newFilterValue) => {        //change what tasks to show (props for footer)
@@ -44,10 +33,7 @@ class TodoList extends React.Component {
     };
 
     deleteList = () => {
-       api.deleteList(this.props.listId).then(res => {
-            if (res.data.resultCode === 0)
-                this.props.deleteList(this.props.listId)
-        });
+    this.props.deleteList(this.props.listId);
     };
 
     changeTitle = (task, newTitle) => {       //edit title by click on ToDoListTasks(props)
@@ -59,11 +45,7 @@ class TodoList extends React.Component {
     };
 
     changeTask = (task, obj) => {
-        api.updateTask({...task, ...obj}).then(res => {
-                if (res.data.resultCode === 0)
-                    this.props.changeTask(res.data.data.item)
-            }
-        );
+      this.props.changeTask(task, obj);
     };
 
     render = () => {
@@ -97,17 +79,14 @@ class TodoList extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        addTask: (newTask) => {
-            const action = addTaskAC(newTask);
-            dispatch(action);
+        addTask: (newTitle, listId) => {
+            dispatch(addTaskTC(newTitle,  listId));
         },
-        changeTask: (task) => {
-            const action = changeTaskAC(task);
-            dispatch(action);
+        changeTask: (task, obj) => {
+            dispatch(changeTaskTC(task, obj));
         },
         deleteList: (listId) => {
-            const action = deleteListAC(listId);
-            dispatch(action);
+            dispatch(deleteListTC(listId));
         },
         changeFilter: (newFilter, listId) => {
             const action = changeFilterAC(newFilter, listId);

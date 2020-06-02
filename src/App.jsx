@@ -14,6 +14,7 @@ class App extends React.Component {
     restoreState = () => {
         this.props.loadLists();
     };
+
     addList = (newTitle) => {           //add new list (props for header)
         this.props.addList(newTitle)
     };

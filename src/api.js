@@ -7,7 +7,7 @@ const instance = axios.create({
 });
 
 export const api = {
-    createTask(newTitle, listId) {
+    addTask(newTitle, listId) {
         return instance.post(`/${listId}/tasks`,
             {title: newTitle})
     },
@@ -28,7 +28,7 @@ export const api = {
         return instance.put(`/${task.todoListId}/tasks/${task.id}`,
             {...task})
     },
-    deleteTask(listId, taskId){
+    deleteTask(taskId, listId){
         return instance.delete(`/${listId}/tasks/${taskId}`)
     }
 };

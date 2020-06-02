@@ -10,28 +10,7 @@ export const SET_LISTS = "todoListReducer/SET-LISTS";
 export const SET_TASKS = "todoListReducer/SET-TASKS";
 
 const initialState = {
-    lists: [
-        // {
-        //     id: 0, title: "what to learn ", tasks: [
-        //         {id: 0, title: "english", isDone: false, priority: "low"},
-        //         {id: 1, title: "polish", isDone: false, priority: "low"}
-        //     ],
-        //     filterValue: "All"
-        // },
-        // {
-        //     id: 1,
-        //     title: "react tasks",
-        //     tasks: [{id: 0, title: "actionCreator", isDone: false, priority: "low"}],
-        //     filterValue: "Active"
-        // },
-        // {
-        //     id: 2, title: "everyday tasks", tasks: [
-        //         {id: 0, title: "do sports", isDone: false, priority: "low"},
-        //         {id: 1, title: "homework", isDone: false, priority: "low"}
-        //     ],
-        //     filterValue: "All"
-        // }
-    ]
+    lists: []
 };
 
 const reducer = (state = initialState, action) => {
@@ -106,26 +85,26 @@ const reducer = (state = initialState, action) => {
 };
 
 
+export const changeFilterAC = (newFilter, listId) => {
+    return {type: CHANGE_FILTER, newFilter, listId};
+};
 const addListAC = (newList) => {
     return {type: ADD_LIST, newList};
 };
 const setListsAC = (lists) => {
     return {type: SET_LISTS, lists};
 };
-export const addTaskAC = (newTask) => {
+const addTaskAC = (newTask) => {
     return {type: ADD_TASK, newTask};
 };
-export const changeTaskAC = (task) => {
+const changeTaskAC = (task) => {
     return {type: CHANGE_TASK, task};
 };
-export const deleteListAC = (listId) => {
+const deleteListAC = (listId) => {
     return {type: DELETE_LIST, listId};
 };
-export const deleteTaskAC = (taskId, listId) => {
+const deleteTaskAC = (taskId, listId) => {
     return {type: DELETE_TASK, taskId, listId};
-};
-export const changeFilterAC = (newFilter, listId) => {
-    return {type: CHANGE_FILTER, newFilter, listId};
 };
 const setTasksAC = (tasks, listId) => {
     return {type: SET_TASKS, tasks, listId}
@@ -153,6 +132,41 @@ export const addListTC = (newTitle) => {
                 dispatch(addListAC(res.data.data.item))
             }
         });
+    }
+};
+export const addTaskTC = (newTitle, listId) => {
+    return (dispatch) => {
+        api.addTask(newTitle, listId).then(res => {
+            if (res.data.resultCode === 0) {
+                dispatch(addTaskAC(res.data.data.item))
+            }
+        });
+    }
+};
+export const changeTaskTC = (task, obj) => {
+    return (dispatch) => {
+        api.updateTask({...task, ...obj}).then(res => {
+                if (res.data.resultCode === 0)
+                    dispatch(changeTaskAC(res.data.data.item));
+            }
+        );
+    }
+};
+export const deleteListTC = (listId) => {
+    return (dispatch) => {
+        api.deleteList(listId).then(res => {
+            if (res.data.resultCode === 0)
+                dispatch(deleteListAC(listId))
+        });
+    }
+};
+export const deleteTaskTC = (taskId, listId) => {
+    return (dispatch) => {
+        api.deleteTask(taskId, listId).then(res => {
+                if (res.data.resultCode === 0)
+                   dispatch(deleteTaskAC(taskId, listId));
+            }
+        );
     }
 };
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
-import {deleteTaskAC} from "./todoListReducer";
+import {deleteTaskTC} from "./todoListReducer";
 import {api} from "./api";
 
 class TodoListTask extends React.Component {
@@ -33,11 +33,7 @@ class TodoListTask extends React.Component {
     };
 
     deleteTask = () => {
-        api.deleteTask(this.props.listId, this.props.task.id).then(res => {
-                if (res.data.resultCode === 0)
-                    this.props.deleteTask(this.props.task.id, this.props.listId)
-            }
-        );
+        this.props.deleteTask(this.props.task.id, this.props.listId)
     };
 
     render = () => {
@@ -59,8 +55,7 @@ class TodoListTask extends React.Component {
 const mapDispatchToProps = (dispatch) => {
     return {
         deleteTask: (taskId, listId) => {
-            const action = deleteTaskAC(taskId, listId);
-            dispatch(action);
+            dispatch(deleteTaskTC(taskId, listId));
         }
     }
 };
